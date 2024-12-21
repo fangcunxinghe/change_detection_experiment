@@ -1,37 +1,94 @@
-# cd
+# SAM-CD
+Pytorch codes of **Adapting Segment Anything Model for Change Detection in HR Remote Sensing Images** [[paper](https://ieeexplore.ieee.org/document/10443350)]
 
-#### 介绍
-cd example for myself
+![alt text](https://github.com/ggsDing/SAM-CD/blob/main/flowchart.png)
 
-#### 软件架构
-软件架构说明
+The SAM-CD adopts [FastSAM](https://github.com/CASIA-IVA-Lab/FastSAM) as the visual encoder with some modifications.
+
+## 2024-4-30 Update:
+
+SAM-CD now supports access to [efficientSAM](https://github.com/yformer/EfficientSAM). Check the updated model at ```models/effSAM_CD.py``` (prior installation of efficientSAM at the project folder is required). However, direct integration of efficientSAM may cause an accuracy drop, so there is space to further improve the SAM-CD architecture.
+
+## How to Use
+1. Installation
+   * Install [FastSAM](https://github.com/CASIA-IVA-Lab/FastSAM) following the instructions.
+   * Modify the Ultralytics source files following the instructions at: ['SAM-CD/models/FastSAM/README.md'](https://github.com/ggsDing/SAM-CD/blob/main/models/FastSAM/README.md). 
+
+2. Dataset preparation.
+   * Please split the data into training, validation and test sets and organize them as follows:
+```
+      YOUR_DATA_DIR
+      ├── ...
+      ├── train
+      │   ├── A
+      │   ├── B
+      │   ├── label
+      ├── val
+      │   ├── A
+      │   ├── B
+      │   ├── label
+      ├── test
+      │   ├── A
+      │   ├── B
+      │   ├── label
+```
+
+   * Find change line 13 in [SAM-CD/datasets/Levir_CD.py](https://github.com/ggsDing/SAM-CD/blob/main/datasets/Levir_CD.py) (or other data-loading .py files), change `/YOUR_DATA_ROOT/` to your local dataset directory.
+
+3. Training
+   
+   classic CD training:
+   `python train_CD.py`
+   
+   training CD with the proposed task-agnostic semantic learning:
+   `python train_SAM_CD.py`
+   
+   line 16-45 are the major training args, which can be changed to load different datasets, models and adjust the training settings.
+
+5. Inference and evaluation
+   
+   inference on test sets: set the chkpt_path and run
+   
+   `python pred_CD.py`
+   
+   evaluation of accuracy: set the prediction dir and GT dir, and run
+   
+   `python eval_CD.py`
+   
+(More details to be added...)
 
 
-#### 安装教程
+## Dataset Download
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+In the following, we summarize links to some frequently used CD datasets:
 
-#### 使用说明
+* [LEVIR-CD](https://justchenhao.github.io/LEVIR/)
+* [WHU-CD](https://study.rsgis.whu.edu.cn/pages/download/) [(baidu)](https://pan.baidu.com/s/1A0_xbV4ZktWCbL3j94CInA?pwd=WHCD )
+* [CLCD (Baidu)](https://pan.baidu.com/s/1iZtAq-2_vdqoz1RnRtivng?pwd=CLCD)
+* [S2Looking](https://github.com/S2Looking/Dataset)
+* [SYSU-CD](https://github.com/liumency/SYSU-CD)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## Pretrained Models
 
-#### 参与贡献
+For readers to easily evaluate the accuracy, we provide the trained weights of the SAM-CD.
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+[Drive](https://drive.google.com/drive/folders/14tNtID43o-LHs8VaMK5jai1Uf8NqMDAW?usp=sharing)  
+[Baidu](https://pan.baidu.com/s/1V25TFGL5V05ZB5ttFXFSEA?pwd=SMCD) (pswd: SMCD)
 
 
-#### 特技
+## Cite SAM-CD
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+If you find this work useful or interesting, please consider citing the following BibTeX entry.
+
+```
+@article{ding2024adapting,
+title={Adapting Segment Anything Model for Change Detection in HR Remote Sensing Images},
+author={Ding, Lei and Zhu, Kun and Peng, Daifeng and Tang, Hao and Yang, Kuiwu and Bruzzone, Lorenzo},
+journal={IEEE Transactions on Geoscience and Remote Sensing}, 
+year={2024},
+volume={62},
+pages={1-11},
+doi={10.1109/TGRS.2024.3368168}
+}
+
+```
